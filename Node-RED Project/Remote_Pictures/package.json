@@ -1,0 +1,11 @@
+{
+    "name": "Test_ESP32_Picture",
+    "description": "Sending pictures to ESP32 through MQTT",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flow.json"
+        }
+    }
+}

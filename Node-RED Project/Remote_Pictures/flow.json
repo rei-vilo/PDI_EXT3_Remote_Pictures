@@ -1,0 +1,734 @@
+[
+    {
+        "id": "bfc694a821882a9b",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "67eda75431cca87e",
+        "type": "image",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 920,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6e8c8cb5809b9642",
+        "type": "ui_template",
+        "z": "bfc694a821882a9b",
+        "group": "d92a90eb83b36394",
+        "name": "fileInput",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<div class=\"fileContainer\">\n    <input type=\"file\" name=\"file\" id=\"file\" class=\"inputfile\" />\n    <label for=\"file\">Image</label>\n    <p style=\"margin:auto\" id=\"fileName\"></p>\n    <button class=\"vibrate filled touched smallfont rounded greybuttons\" ng-click=\"clear()\"> \n       <ng-md-icon style=\"color: #fff;\" icon=\"clear\">\n            <md-tooltip md-direction=\"bottom\">CLEAR</md-tooltip>\n        </ng-md-icon>\n    </button> \n</div>\n\n<style>\n    .fileContainer {\n        display: flex;\n    }\n    .inputfile {\n\twidth: 0.1px;\n\theight: 0.1px;\n\topacity: 0;\n\toverflow: hidden;\n\tposition: absolute;\n\tz-index: -1;\n}\n\n.inputfile + label {\n    font-size: 1.25em;\n    font-weight: 700;\n    color: white;\n    text-align: center;\n    padding: 5px;\n    width: 60px;\n    background-color: black;\n}\n\n.inputfile:focus + label,\n.inputfile + label:hover {\n    background-color: red;\n}\n\n.inputfile + label {\n\tcursor: pointer; /* \"hand\" cursor */\n}\n\n.inputfile:focus + label {\n\toutline: 1px dotted #000;\n\toutline: -webkit-focus-ring-color auto 5px;\n}\n\n.inputfile + label * {\n\tpointer-events: none;\n}\n\n</style>\n\n<script>\n(function(scope) {\n   var fileInput = $('#file')\n   var fileName = $('#fileName')\n   \n   scope.clear = function() {\n       fileInput.val('').trigger('change')\n   }\n   \n   fileInput.on('change', function(event) {\n        var file = fileInput[0].files[0]; \n        \n        fileName.text(file ? file.name : '')\n        \n        if(file) {\n       \n            var reader = new FileReader();\n            reader.readAsBinaryString(file);\n        \n            reader.onload = function() {\n                scope.send({payload: reader.result, file: file.name})\n            };\n            reader.onerror = function() {\n                console.log('Error while reading files');\n            };\n        } else\n            scope.send({payload: null})\n   })\n    \n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": false,
+        "templateScope": "local",
+        "className": "",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "0833b350ae5a9886",
+                "0ca1d74a45381e29"
+            ]
+        ]
+    },
+    {
+        "id": "918fa1b2c53aa92d",
+        "type": "function",
+        "z": "bfc694a821882a9b",
+        "name": "image_input",
+        "func": "// binary is critical\nvar buffer = new Buffer(msg.payload, \"binary\");\n\n// New message\nvar newMsg = {\n    topic: 'create',\n    payload: buffer, \n    filename: \"/tmp/image_input\"\n};\n\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "67eda75431cca87e",
+                "2a4360b72a320ad7",
+                "d2b94a5e8d4d71a2"
+            ]
+        ]
+    },
+    {
+        "id": "2a4360b72a320ad7",
+        "type": "file",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "filename": "",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 420,
+        "y": 160,
+        "wires": [
+            [
+                "d93d3233df2cf8ae",
+                "d93d3233df2cf8ae",
+                "ab8f72c3056fe86e"
+            ]
+        ]
+    },
+    {
+        "id": "0ca1d74a45381e29",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "ab8f72c3056fe86e",
+        "type": "exec",
+        "z": "bfc694a821882a9b",
+        "command": "gm convert",
+        "addpay": "filename",
+        "append": "-rotate 90 PBM:/tmp/image_output",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "2f56543eb18d0d4e",
+                "2f56543eb18d0d4e"
+            ],
+            [
+                "e39f964b8660580c",
+                "e39f964b8660580c"
+            ],
+            [
+                "e47f6edf7cf51bfe",
+                "e47f6edf7cf51bfe"
+            ]
+        ]
+    },
+    {
+        "id": "d93d3233df2cf8ae",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "2f56543eb18d0d4e",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e39f964b8660580c",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "e47f6edf7cf51bfe",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "6f900f547681b29b",
+        "type": "file in",
+        "z": "bfc694a821882a9b",
+        "name": "read file",
+        "filename": "/tmp/image_output",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 420,
+        "y": 400,
+        "wires": [
+            [
+                "108bba224407b9b0",
+                "108bba224407b9b0",
+                "78421869cf9a05b1"
+            ]
+        ]
+    },
+    {
+        "id": "108bba224407b9b0",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "37dccf0215737594",
+        "type": "mqtt out",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1be40931a72d2af5",
+        "x": 890,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "5867aa281be69e66",
+        "type": "ui_led",
+        "z": "bfc694a821882a9b",
+        "order": 2,
+        "group": "f5ace72b6ad09324",
+        "width": 3,
+        "height": 1,
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ffff00",
+                "value": "on",
+                "valueType": "str"
+            },
+            {
+                "color": "#808080",
+                "value": "off",
+                "valueType": "str"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 890,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "c29082a3332dcabd",
+        "type": "ui_switch",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "label": "LED",
+        "tooltip": "",
+        "group": "f5ace72b6ad09324",
+        "order": 1,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "image/led",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "on",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "off",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 110,
+        "y": 540,
+        "wires": [
+            [
+                "5867aa281be69e66",
+                "37dccf0215737594",
+                "caabcb6bc51fbe3c"
+            ]
+        ]
+    },
+    {
+        "id": "3190fb9692573816",
+        "type": "ui_button",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "group": "f5ace72b6ad09324",
+        "order": 3,
+        "width": 3,
+        "height": 1,
+        "passthru": false,
+        "label": "End",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "end",
+        "payloadType": "str",
+        "topic": "image/end",
+        "topicType": "str",
+        "x": 110,
+        "y": 660,
+        "wires": [
+            [
+                "37dccf0215737594",
+                "0bf92e6b3434ade1"
+            ]
+        ]
+    },
+    {
+        "id": "c38f2f02b27a3920",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "ba553e1d33ee7b2c",
+        "type": "ui_media",
+        "z": "bfc694a821882a9b",
+        "group": "72f10710e7aa4184",
+        "name": "",
+        "width": 0,
+        "height": 0,
+        "order": 1,
+        "category": "",
+        "file": "",
+        "layout": "adjust",
+        "showcontrols": true,
+        "loop": true,
+        "onstart": false,
+        "scope": "local",
+        "tooltip": "",
+        "x": 890,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d2b94a5e8d4d71a2",
+        "type": "change",
+        "z": "bfc694a821882a9b",
+        "name": "image",
+        "rules": [
+            {
+                "t": "set",
+                "p": "mimetype",
+                "pt": "msg",
+                "to": "image",
+                "tot": "str",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 80,
+        "wires": [
+            [
+                "ba553e1d33ee7b2c"
+            ]
+        ]
+    },
+    {
+        "id": "78421869cf9a05b1",
+        "type": "change",
+        "z": "bfc694a821882a9b",
+        "name": "image/show",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "image/show",
+                "tot": "str",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 380,
+        "wires": [
+            [
+                "37dccf0215737594"
+            ]
+        ]
+    },
+    {
+        "id": "040a58510c473aec",
+        "type": "ui_button",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "group": "f5ace72b6ad09324",
+        "order": 4,
+        "width": 3,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "end",
+        "payloadType": "str",
+        "topic": "image/clear",
+        "topicType": "str",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "37dccf0215737594",
+                "c38f2f02b27a3920"
+            ]
+        ]
+    },
+    {
+        "id": "0833b350ae5a9886",
+        "type": "switch",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 230,
+        "y": 100,
+        "wires": [
+            [
+                "918fa1b2c53aa92d",
+                "bd1256058daf4f5f"
+            ],
+            [
+                "e30555627626c299"
+            ]
+        ]
+    },
+    {
+        "id": "ace0bd8685e44db5",
+        "type": "ui_button",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "group": "d92a90eb83b36394",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": "Send",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "6f900f547681b29b"
+            ]
+        ]
+    },
+    {
+        "id": "bd1256058daf4f5f",
+        "type": "change",
+        "z": "bfc694a821882a9b",
+        "name": "true",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "ace0bd8685e44db5"
+            ]
+        ]
+    },
+    {
+        "id": "e30555627626c299",
+        "type": "change",
+        "z": "bfc694a821882a9b",
+        "name": "false",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 230,
+        "y": 300,
+        "wires": [
+            [
+                "ace0bd8685e44db5"
+            ]
+        ]
+    },
+    {
+        "id": "43b1dc5c4aabd031",
+        "type": "inject",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "props": [
+            {
+                "p": "enabled",
+                "v": "false",
+                "vt": "bool"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "ace0bd8685e44db5"
+            ]
+        ]
+    },
+    {
+        "id": "caabcb6bc51fbe3c",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "0bf92e6b3434ade1",
+        "type": "debug",
+        "z": "bfc694a821882a9b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "698fab0dd9e8187c",
+        "type": "ui_spacer",
+        "z": "bfc694a821882a9b",
+        "name": "spacer",
+        "group": "d92a90eb83b36394",
+        "order": 2,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "d92a90eb83b36394",
+        "type": "ui_group",
+        "name": "Message",
+        "tab": "6e2706eb23bc4161",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1be40931a72d2af5",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f5ace72b6ad09324",
+        "type": "ui_group",
+        "name": "Control",
+        "tab": "6e2706eb23bc4161",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "72f10710e7aa4184",
+        "type": "ui_group",
+        "name": "Image",
+        "tab": "6e2706eb23bc4161",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6e2706eb23bc4161",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

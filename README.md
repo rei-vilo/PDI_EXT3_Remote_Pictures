@@ -1,4 +1,4 @@
-# PDI_EXT3_Remote_Pictures
+# PDI EXT3 Remote Pictures
 
 *Display pictures remotely on an e-paper panel*
 
