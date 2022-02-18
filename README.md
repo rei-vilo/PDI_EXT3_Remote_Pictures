@@ -4,7 +4,7 @@
 
 ## Instructions
 
-Read the full instructions at Hackster.io
+find the full instructions at [Hackster.io](https://www.hackster.io/rei-vilo/remote-e-paper-pictures-panel-44094f).
 
 ## Licence
 
