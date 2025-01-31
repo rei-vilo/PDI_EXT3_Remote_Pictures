@@ -63,7 +63,7 @@ void callbackMQTT(char * topic, byte * message, unsigned int length)
             Serial.print((char)message[0]);
             Serial.print(".");
             Serial.print((char)message[1]);
-                  Serial.println("Error - Not P4");
+            Serial.println("Error - Not P4");
 
             return;
         }
