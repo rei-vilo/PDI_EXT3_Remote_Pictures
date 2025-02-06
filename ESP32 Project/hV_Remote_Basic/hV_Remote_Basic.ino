@@ -5,8 +5,8 @@
 /// @details Example for PDLS
 ///
 /// @author Rei Vilo
-/// @date 14 Feb 2022
-/// @version 102
+/// @date 06 Feb 2025
+/// @version 903
 ///
 /// @copyright (c) Rei Vilo, 2010-2022
 /// @copyright CC = BY SA NC
@@ -16,7 +16,8 @@
 ///
 
 // SDK
-#include "Arduino.h"
+// #include "Arduino.h"
+#include "PDLS_Common.h"
 
 // Configuration
 
@@ -34,8 +35,13 @@
 
 // === Pervasive Displays iTC
 // --- Small
-#include "PDLS_EXT3_Basic_Fast.h"
-Screen_EPD_EXT3_Fast myScreen(eScreen_EPD_EXT3_271_Fast, boardESP32DevKitC);
+// #include "PDLS_EXT3_Basic_Fast.h"
+// Screen_EPD_EXT3_Fast myScreen(eScreen_EPD_EXT3_271_Fast, boardESP32DevKitC);
+#include "Pervasive_Wide_Small.h"
+Pervasive_Wide_Small myDriver(eScreen_EPD_271_KS_0C, boardESP32DevKitC);
+
+#include "PDLS_Basic.h"
+Screen_EPD myScreen(&myDriver);
 
 // Variables
 WiFiClient myWiFi;
